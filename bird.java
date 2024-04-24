@@ -64,7 +64,7 @@ public class bird extends JPanel implements ActionListener,KeyListener{
     int gravity = 1;
 
     ArrayList<pipe> pipes;
-    
+    Random random = new Random();
 
 
     bird(){
@@ -82,7 +82,7 @@ public class bird extends JPanel implements ActionListener,KeyListener{
         bird = new Bird(birdImage);
         pipes = new ArrayList<pipe>();
 
-        placePipesTimer = new Timer(1500,new ActionListener() {
+        placePipesTimer = new Timer(2000,new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 placePipes();
@@ -98,8 +98,16 @@ public class bird extends JPanel implements ActionListener,KeyListener{
     }
 
     public void placePipes(){
+        int randomPipeY = (int)(pipeY-pipeHeight/4 - Math.random()*(pipeHeight/2));
+        int openSpace = frameHeight/4;
+
         pipe toppipe = new pipe(upperPipeImage);
+        toppipe.y = randomPipeY;
         pipes.add(toppipe);
+
+        pipe bottompipe = new pipe(lowerPipeImage);
+        bottompipe.y = toppipe.y + pipeHeight + openSpace;
+        pipes.add(bottompipe);
     }
 
     @Override
