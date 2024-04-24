@@ -67,6 +67,9 @@ public class bird extends JPanel implements ActionListener,KeyListener{
     Random random = new Random();
 
 
+    boolean isGameOver = false;
+
+
     bird(){
         setPreferredSize(new Dimension(frameWidth, frameHeight));
         setFocusable(true);
@@ -137,13 +140,41 @@ public class bird extends JPanel implements ActionListener,KeyListener{
         for (int i = 0; i < pipes.size(); i++) {
             pipe p = pipes.get(i);
             p.x += velocityX;
+
+
+            if(collision(bird, p)){
+                isGameOver = true;
+            }
         }
+
+        if(bird.y >= frameHeight){
+            isGameOver = true;
+        }
+
+        if (bird.y <= 0) {
+            isGameOver = true;
+        }
+
+        
+
     }
+
+    boolean collision(Bird a, pipe b) {
+        return a.x < b.x + b.width &&   //a's top left corner doesn't reach b's top right corner
+               a.x + a.width > b.x &&   //a's top right corner passes b's top left corner
+               a.y < b.y + b.height &&  //a's top left corner doesn't reach b's bottom left corner
+               a.y + a.height > b.y;    //a's bottom left corner passes b's top left corner
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
         move();
         repaint();
+        if(isGameOver){
+            gameloop.stop();
+            placePipesTimer.stop();
+        }
     }
 
     @Override
