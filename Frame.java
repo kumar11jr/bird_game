@@ -16,6 +16,7 @@ public class Frame{
         bird bird = new bird();
         frame.add(bird);
         frame.pack();
+        bird.requestFocus();
         frame.setVisible(true);
     }
 }
