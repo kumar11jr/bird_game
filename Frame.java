@@ -11,6 +11,11 @@ public class Frame{
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
+
+        bird bird = new bird();
+        frame.add(bird);
+        frame.pack();
+        frame.setVisible(true);
     }
 }
