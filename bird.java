@@ -68,7 +68,7 @@ public class bird extends JPanel implements ActionListener,KeyListener{
 
 
     boolean isGameOver = false;
-
+    double score = 0;
 
     bird(){
         setPreferredSize(new Dimension(frameWidth, frameHeight));
@@ -130,6 +130,15 @@ public class bird extends JPanel implements ActionListener,KeyListener{
             g.drawImage(p.img, p.x, p.y, p.width, p.height, null);
         }
 
+
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+        if(isGameOver){
+            g.drawString("Game Over"+ String.valueOf((int) score),10,35);
+        }else{
+            g.drawString(String.valueOf((int) score),10,35);
+        }
     }
 
     public void move(){
@@ -140,6 +149,11 @@ public class bird extends JPanel implements ActionListener,KeyListener{
         for (int i = 0; i < pipes.size(); i++) {
             pipe p = pipes.get(i);
             p.x += velocityX;
+
+            if(!p.passed && bird.x > p.x + p.width){
+                p.passed = true;
+                score += 0.5;
+            } 
 
 
             if(collision(bird, p)){
@@ -186,7 +200,16 @@ public class bird extends JPanel implements ActionListener,KeyListener{
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_SPACE){
             velocityY = -9;
-        }
+            if(isGameOver){
+                bird.y = birdY;
+                velocityY = 0;
+                pipes.clear();
+                score = 0;
+                isGameOver = false;
+                gameloop.start();
+                placePipesTimer.start();
+            }
+        } 
     }
 
     @Override
