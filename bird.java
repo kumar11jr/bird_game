@@ -37,11 +37,34 @@ public class bird extends JPanel implements ActionListener,KeyListener{
     }
 
 
+    int pipeX = frameWidth;
+    int pipeY = 0;
+    int pipeWidth = 64;
+    int pipeHeight = 512;
+
+
+    class pipe{
+        int x = pipeX;
+        int y = pipeY;
+        int width = pipeWidth;
+        int height = pipeHeight;
+        Image img;
+        boolean passed = false;
+
+        pipe(Image img){
+            this.img = img;
+        }
+    }
 
     Bird bird;
     Timer gameloop;
+    Timer placePipesTimer;
+    int velocityX = -4;
     int velocityY = 0;
     int gravity = 1;
+
+    ArrayList<pipe> pipes;
+    
 
 
     bird(){
@@ -57,10 +80,26 @@ public class bird extends JPanel implements ActionListener,KeyListener{
 
 
         bird = new Bird(birdImage);
+        pipes = new ArrayList<pipe>();
+
+        placePipesTimer = new Timer(1500,new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                placePipes();
+            }
+        });
+
+        placePipesTimer.start();
+
 
         // this -> refers to bird class
         gameloop = new Timer(1000/60,this);
         gameloop.start();
+    }
+
+    public void placePipes(){
+        pipe toppipe = new pipe(upperPipeImage);
+        pipes.add(toppipe);
     }
 
     @Override
@@ -75,12 +114,22 @@ public class bird extends JPanel implements ActionListener,KeyListener{
         g.drawImage(bird.img, bird.x, bird.y, bird.width, bird.height, null);
 
 
+        for (int i = 0; i < pipes.size(); i++) {
+            pipe p = pipes.get(i);
+            g.drawImage(p.img, p.x, p.y, p.width, p.height, null);
+        }
+
     }
 
     public void move(){
         velocityY += gravity;
         bird.y += velocityY;
         birdY = Math.max(bird.y,0);
+
+        for (int i = 0; i < pipes.size(); i++) {
+            pipe p = pipes.get(i);
+            p.x += velocityX;
+        }
     }
 
     @Override
